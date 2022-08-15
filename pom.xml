@@ -66,6 +66,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+		<dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.6.9</version>
+   </dependency>
 		<!-- Thanks for using https://jar-download.com -->
 
 	</dependencies>

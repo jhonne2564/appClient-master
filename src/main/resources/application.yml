@@ -12,3 +12,7 @@ server:
 
 bci:
   pattern: localhost
+
+springdoc:
+  swagger-ui: 
+    path: /doc/swagger-ui.html
