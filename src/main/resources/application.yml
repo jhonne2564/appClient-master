@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: info
+    com.bci.coreservice: DEBUG
+
+server:
+  servlet:
+    context-path: /
+  port: 8080
+  error:
+    include-stacktrace: NEVER
+
+bci:
+  pattern: localhost
