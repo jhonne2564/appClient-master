@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.bci.coreservice.dto.CreateUserDto;
+import com.bci.coreservice.dto.UserResponseDto;
+import com.bci.coreservice.exception.EmailException;
 import com.bci.coreservice.model.User;
 
 @Service
@@ -20,19 +22,19 @@ public class UserService {
 		this.processGetAll=processGetAll;
 	}
 	
-	public void create(CreateUserDto createUser) {
+	public UserResponseDto create(CreateUserDto createUser) throws EmailException{
 		 List<User> users=geAllClients().stream().
-				 filter(user -> user.getEmail().equalsIgnoreCase(user.getEmail())).toList();
+				 filter(user -> user.getEmail().equalsIgnoreCase(createUser.getEmail())).toList();
 		 
 		 if(users==null||users.isEmpty() ){
-			 processCreate.create(createUser);
+			 return processCreate.create(createUser);
 		 }else {
 			 logger.error("Email ya existe");
-		 }
-		
+			 throw new EmailException("El correo ya esta registrado") ;			 
+		 }		
 	}
 
-	public List<User> geAllClients() {
+	public List<User> geAllClients() {			
 		return processGetAll.getAll();		
 	}
 }

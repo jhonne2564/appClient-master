@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.bci.coreservice.model.Phone;
+
 import lombok.Data;
 
 @Data
@@ -19,5 +21,6 @@ public class CreateUserDto {
 	
 	private String password;
 	
-	private List<PhoneDto> phones;
+	private List<Phone> phones;
+	private String token;
 }

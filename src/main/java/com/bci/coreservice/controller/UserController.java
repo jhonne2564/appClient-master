@@ -53,7 +53,7 @@ public class UserController {
 	@PostMapping(value = "/public/create")
 	public ResponseEntity<UserResponseDto> create(@RequestBody @NotNull  @Validated CreateUserDto user){
 		logger.debug("Begin create");
-		ResponseEntity<UserResponseDto> response=null;		
+		ResponseEntity<UserResponseDto> responseFinal=null;		
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(user.getEmail(),
@@ -63,26 +63,24 @@ public class UserController {
 					  user.getEmail());
 	
 			final String jwt = jwtUtilService.generateToken(userDetails);
-			userService.create(user);
-			UserResponseDto userresponse = new UserResponseDto();
-			userresponse.setMensaje("ok");
-			userresponse.setToken(jwt);
-			response=new ResponseEntity<>(userresponse,HttpStatus.OK);
+			user.setToken(jwt);
+			UserResponseDto response=userService.create(user);			
+			responseFinal=new ResponseEntity<>(response,HttpStatus.OK);
 			logger.debug("End create");
 		
 		}catch(Exception e) {
 			logger.error("Error creando usuario:{}",e.getMessage(),e);
 			UserResponseDto userresponse = new UserResponseDto();
-			userresponse.setMensaje(e.getMessage());
-			response=new ResponseEntity<>(userresponse,HttpStatus.INTERNAL_SERVER_ERROR);
+			userresponse.setMensaje(e.getMessage());			
+			responseFinal=new ResponseEntity<>(userresponse,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return response;
+		return responseFinal;
 	}
 
 	@GetMapping("/public/all")
 	public ResponseEntity<List<User>> allUsers() {
 
-		logger.debug("Begin allUsers:" + pattern);
+		logger.debug("Begin allUsers");
 		List<User> list = userService.geAllClients();
 		ResponseEntity<List<User>> response = new ResponseEntity<List<User>>(list, HttpStatus.OK);
 		logger.debug("End allUsers");
@@ -90,6 +88,17 @@ public class UserController {
 
 	}
 
+	@GetMapping("/user/all")
+	public ResponseEntity<List<User>> allUsersAdmin() {
+
+		logger.debug("Begin allUsers");
+		List<User> list = userService.geAllClients();
+		ResponseEntity<List<User>> response = new ResponseEntity<List<User>>(list, HttpStatus.OK);
+		logger.debug("End allUsers");
+		return response;
+
+	}
+	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
